@@ -37,6 +37,9 @@ public class Event
     [Column("event_type", TypeName = "varchar(20)")]
     public string EventType { get; set; } = string.Empty;
 
+    [Column("distance_km", TypeName = "decimal(5,2)")]
+    public decimal DistanceKm { get; set; }
+
     public ICollection<Category> Categories { get; set; } = new List<Category>();
 }
 

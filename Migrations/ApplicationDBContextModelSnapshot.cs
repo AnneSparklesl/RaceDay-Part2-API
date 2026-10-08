@@ -98,6 +98,10 @@ namespace API_proj.Migrations
                         .HasColumnType("varchar(500)")
                         .HasColumnName("description");
 
+                    b.Property<decimal>("DistanceKm")
+                        .HasColumnType("decimal(5,2)")
+                        .HasColumnName("distance_km");
+
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime")
                         .HasColumnName("event_date");
