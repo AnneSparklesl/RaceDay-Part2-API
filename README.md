@@ -1,4 +1,5 @@
 ﻿# RaceDay Event Management System (API)
+ Part 2 Repo link : 
  Part 1 (planning and database) : see the https://github.com/AnneSparklesl/RaceDay-Event-Management/tree/main/docs folder for the erd api plan , sql script.
  
  Part 2 (updated planning documents): See the [/docs](./docs) folder for the updated ERD, API plan and SQL script.
