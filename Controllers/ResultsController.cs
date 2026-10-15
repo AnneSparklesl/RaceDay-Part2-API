@@ -166,6 +166,31 @@ public class ResultsController : ControllerBase
         return Ok(new { result.Id, result.EnrolmentId, result.FinishTime, result.Position });
     }
 
+    // GET /api/events/{eventId}/results - leaderboard for one event
+    [HttpGet("/api/events/{eventId}/results")]
+    [SessionAuthorize]
+    public async Task<IActionResult> GetForEvent(int eventId)
+    {
+        if (!await _context.Events.AnyAsync(e => e.Id == eventId))
+            return NotFound(new { message = "Event not found." });
+
+        var results = await _context.Results
+            .Where(r => r.Enrolment.Category.EventId == eventId)
+            .OrderBy(r => r.Position)
+            .Select(r => new
+            {
+                r.Id,
+                r.EnrolmentId,
+                Participant = r.Enrolment.Participant.Name,
+                Category = r.Enrolment.Category.Name,
+                r.FinishTime,
+                r.Position
+            })
+            .ToListAsync();
+
+        return Ok(results);
+    }
+
     // DELETE /api/results/{id} - Organisers only, for their own events
     [HttpDelete("{id}")]
     [SessionAuthorize("Organiser")]

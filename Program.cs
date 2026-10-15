@@ -19,7 +19,12 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Swagger with custom endpoint descriptions
+builder.Services.AddSwaggerGen(options =>
+{
+    options.OperationFilter<API_proj.Filters.EndpointDescriptionsFilter>();
+});
 
 var app = builder.Build();
 
