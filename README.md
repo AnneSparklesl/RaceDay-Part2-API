@@ -69,4 +69,4 @@ A GitHub Actions workflow (`.github/workflows/dotnet.yml`) builds the project an
 - Extra endpoints beyond the plan: logout, and delete endpoints for enrolments and the user's own account.
 
 ## Video walkthrough
-[Watch on YouTube (unlisted)](PASTE-YOUR-LINK-HERE)
+[Watch on YouTube (unlisted)](https://youtu.be/a8O-KbHQgX0)
