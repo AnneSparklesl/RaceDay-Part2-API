@@ -56,7 +56,7 @@ There are 30 xUnit tests covering registration and login, event management, role
 ## Continuous integration
 A GitHub Actions workflow (`.github/workflows/dotnet.yml`) builds the project and runs all the tests on every push.
 
-![Green build](Screenshots/ci-green-build.png)
+![Green build](ci-green-build.png)
 
 ## Differences from the Part 1 plan
 - Login uses server-side sessions (a session cookie storing the user id and role) instead of bearer tokens.
