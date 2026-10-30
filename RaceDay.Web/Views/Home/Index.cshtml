@@ -1,8 +1,14 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
+    var loggedIn = Context.Session.GetInt32("UserId") != null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero text-center">
+    <h1>Find your next <span>finish line</span></h1>
+    <p class="lead mb-4">Discover runs, walks and cycling events, enter in a few clicks and track every result.</p>
+    @if (!loggedIn)
+    {
+        <a class="btn btn-primary btn-lg me-2" asp-controller="Account" asp-action="Register">Join RaceDay</a>
+        <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Login">Log in</a>
+    }
+</section>
