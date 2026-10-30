@@ -1,26 +1,29 @@
-   name: Build and test
+name: Build and test
 
-   on:
-     push:
-     pull_request:
+on:
+  push:
+  pull_request:
 
-   jobs:
-     build:
-       runs-on: ubuntu-latest
-       steps:
-         - name: Check out code
-           uses: actions/checkout@v4
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
 
-         - name: Set up .NET 8
-           uses: actions/setup-dotnet@v4
-           with:
-             dotnet-version: 8.0.x
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
-         - name: Restore
-           run: dotnet restore
+      - name: Restore solution
+        run: dotnet restore API_proj.sln
 
-         - name: Build
-           run: dotnet build --no-restore
+      - name: Build API
+        run: dotnet build API_proj.csproj --no-restore
 
-         - name: Test
-           run: dotnet test --no-build --verbosity normal
+      - name: Build MVC project (RaceDay.Web)
+        run: dotnet build RaceDay.Web/RaceDay.Web.csproj --no-restore
+
+      - name: Test
+        run: dotnet test API_proj.sln --no-restore --verbosity normal
