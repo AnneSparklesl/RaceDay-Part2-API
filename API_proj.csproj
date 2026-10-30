@@ -19,10 +19,16 @@
 		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 	</ItemGroup>
-<ItemGroup>
-     <Compile Remove="API_prog.API.Test\**" />
-     <EmbeddedResource Remove="API_prog.API.Test\**" />
-     <None Remove="API_prog.API.Test\**" />
-   </ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="API_prog.API.Test\**" />
+		<EmbeddedResource Remove="API_prog.API.Test\**" />
+		<None Remove="API_prog.API.Test\**" />
+
+		<Compile Remove="RaceDay.Web\**" />
+		<Content Remove="RaceDay.Web\**" />
+		<EmbeddedResource Remove="RaceDay.Web\**" />
+		<None Remove="RaceDay.Web\**" />
+	</ItemGroup>
 
 </Project>
