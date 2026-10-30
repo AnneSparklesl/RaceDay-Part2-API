@@ -1,22 +1,136 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+:root {
+    --rd-navy: #0b1f3a;
+    --rd-orange: #ff5a1f;
+    --rd-orange-dark: #e04a12;
+    --rd-light: #f4f6fa;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    background-color: var(--rd-light);
+    color: #1b2433;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 800;
+    color: var(--rd-navy);
+}
+
+a {
+    color: var(--rd-orange-dark);
+}
+
+/* Navigation */
+.raceday-nav {
+    background-color: var(--rd-navy);
+    border-bottom: 4px solid var(--rd-orange);
+}
+
+    .raceday-nav .navbar-brand {
+        font-weight: 900;
+        letter-spacing: 2px;
+        font-size: 1.4rem;
+    }
+
+        .raceday-nav .navbar-brand span {
+            color: var(--rd-orange);
+        }
+
+    .raceday-nav .nav-link {
+        font-weight: 600;
+    }
+
+.role-badge {
+    background-color: var(--rd-orange);
+}
+
+/* Buttons */
+.btn-primary {
+    --bs-btn-bg: var(--rd-orange);
+    --bs-btn-border-color: var(--rd-orange);
+    --bs-btn-hover-bg: var(--rd-orange-dark);
+    --bs-btn-hover-border-color: var(--rd-orange-dark);
+    --bs-btn-active-bg: #c93f0d;
+    --bs-btn-active-border-color: #c93f0d;
+    --bs-btn-disabled-bg: var(--rd-orange);
+    --bs-btn-disabled-border-color: var(--rd-orange);
+    font-weight: 700;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--rd-orange-dark);
+    --bs-btn-border-color: var(--rd-orange);
+    --bs-btn-hover-bg: var(--rd-orange);
+    --bs-btn-hover-border-color: var(--rd-orange);
+    --bs-btn-active-bg: var(--rd-orange-dark);
+    --bs-btn-active-border-color: var(--rd-orange-dark);
+}
+
+/* Cards and forms */
+.card {
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(11, 31, 58, 0.1);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--rd-orange);
+    box-shadow: 0 0 0 0.2rem rgba(255, 90, 31, 0.25);
+}
+
+/* Enrolment status colours */
+.status-badge {
+    font-weight: 700;
+    padding: 0.45em 0.8em;
+    border-radius: 20px;
+}
+
+.status-confirmed {
+    background-color: #198754;
+    color: #fff;
+}
+
+.status-pending {
+    background-color: #ffb100;
+    color: #1b2433;
+}
+
+.status-cancelled {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Landing hero */
+.hero {
+    background: linear-gradient(135deg, var(--rd-navy) 0%, #1c3d6b 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 4rem 1.5rem;
+    border-bottom: 6px solid var(--rd-orange);
+}
+
+    .hero h1 {
+        color: #fff;
+        font-size: 2.8rem;
+        text-transform: uppercase;
+    }
+
+        .hero h1 span {
+            color: var(--rd-orange);
+        }
+
+/* Footer */
+.raceday-footer {
+    background-color: var(--rd-navy);
+    color: #aab4c5;
+    text-align: center;
+    padding: 1rem 0;
+    border-top: 4px solid var(--rd-orange);
 }
