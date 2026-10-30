@@ -1,0 +1,69 @@
+﻿@model RaceDay.Web.ViewModels.VenuesPageViewModel
+@{
+    ViewData["Title"] = "Venues";
+}
+
+<h1 class="mb-4">Venues</h1>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Add a venue</h2>
+                <form asp-action="Create" method="post">
+                    <div class="mb-3">
+                        <label class="form-label" for="Name">Venue name</label>
+                        <input class="form-control" id="Name" name="Name" maxlength="100" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="Address">Address (optional)</label>
+                        <input class="form-control" id="Address" name="Address" maxlength="200" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="City">City</label>
+                        <input class="form-control" id="City" name="City" maxlength="100" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Add venue</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5 mb-3">All venues</h2>
+                @if (!Model.Venues.Any())
+                {
+                    <p class="text-muted mb-0">No venues yet. Add your first venue on the left.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr><th>Name</th><th>Address</th><th>City</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var venue in Model.Venues)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@venue.Name</td>
+                                        <td>@(string.IsNullOrWhiteSpace(venue.Address) ? "-" : venue.Address)</td>
+                                        <td>@venue.City</td>
+                                        <td class="text-end">
+                                            <form asp-action="Delete" asp-route-id="@venue.Id" method="post"
+                                                  onsubmit="return confirm('Delete this venue?');">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
