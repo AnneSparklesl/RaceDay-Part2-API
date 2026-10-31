@@ -1,0 +1,103 @@
+﻿@model RaceDay.Web.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1 class="mb-1">Dashboard</h1>
+<p class="text-muted mb-4">Welcome back, @Model.OrganiserName.</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted small text-uppercase fw-semibold">Total events</div>
+                <div class="display-6 fw-bold">@Model.TotalEvents</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted small text-uppercase fw-semibold">Upcoming events</div>
+                <div class="display-6 fw-bold">@Model.UpcomingEvents</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted small text-uppercase fw-semibold">Total enrolments</div>
+                <div class="display-6 fw-bold">@Model.TotalEnrolments</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.NextEvent != null)
+{
+    <div class="card mb-4 border-start border-4" style="border-color: var(--rd-orange) !important;">
+        <div class="card-body">
+            <div class="text-muted small text-uppercase fw-semibold">Next event</div>
+            <h2 class="h4 mb-1">@Model.NextEvent.Name</h2>
+            <div>
+                @Model.NextEvent.EventDate.ToString("dddd, dd MMM yyyy 'at' HH:mm") &middot; @Model.NextEvent.Venue
+                &middot; @Model.NextEvent.EnrolmentCount enrolled
+            </div>
+        </div>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 mb-0">Your events</h2>
+            <a asp-controller="OrganiserEvents" asp-action="Create" class="btn btn-primary btn-sm">+ Create event</a>
+        </div>
+
+        @if (!Model.Events.Any())
+        {
+            <p class="text-muted mb-0">You have not created any events yet.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Venue</th>
+                            <th class="text-center">Enrolments</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Events)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">@row.Name</div>
+                                    <span class="badge bg-secondary">@row.EventType</span>
+                                    <span class="text-muted small">@row.DistanceKm.ToString("0.##") km</span>
+                                </td>
+                                <td>@row.EventDate.ToString("dd MMM yyyy, HH:mm")</td>
+                                <td>@row.Venue</td>
+                                <td class="text-center fw-bold">@row.EnrolmentCount</td>
+                                <td>
+                                    @if (row.IsUpcoming)
+                                    {
+                                        <span class="badge status-badge status-confirmed">Upcoming</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge status-badge status-cancelled">Completed</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
