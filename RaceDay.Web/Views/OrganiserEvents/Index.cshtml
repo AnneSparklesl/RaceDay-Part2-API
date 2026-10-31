@@ -45,6 +45,8 @@ else
                                 <td>@item.DistanceKm.ToString("0.##") km</td>
                                 <td class="text-end">
                                     <div class="d-flex gap-2 justify-content-end">
+                                        <a asp-controller="OrganiserCategories" asp-action="Index" asp-route-eventId="@item.Id"
+                                           class="btn btn-outline-secondary btn-sm">Categories</a>
                                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">Edit</a>
                                         <form asp-action="Delete" asp-route-id="@item.Id" method="post"
                                               onsubmit="return confirm('Delete this event?');">
