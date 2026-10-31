@@ -1,0 +1,75 @@
+﻿@model RaceDay.Web.ViewModels.CategoriesPageViewModel
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<a asp-controller="OrganiserEvents" asp-action="Index" class="text-decoration-none">&larr; Back to my events</a>
+
+<h1 class="mt-2 mb-1">Categories</h1>
+<p class="text-muted mb-4">
+    @Model.Event.Name &middot; @Model.Event.EventDate.ToString("dd MMM yyyy, HH:mm") &middot; @Model.Event.Venue
+</p>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Add a category</h2>
+                <form asp-action="Create" method="post">
+                    <input type="hidden" name="EventId" value="@Model.Event.Id" />
+                    <div class="mb-3">
+                        <label class="form-label" for="Name">Category name</label>
+                        <input class="form-control" id="Name" name="Name" maxlength="50" required
+                               placeholder="e.g. Open 10 km or Under 18" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="DistanceKm">Distance (km)</label>
+                        <input type="number" step="0.01" min="0.1" max="999.99" class="form-control"
+                               id="DistanceKm" name="DistanceKm" value="@Model.Event.DistanceKm.ToString("0.##")" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Add category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Categories for this event</h2>
+                @if (!Model.Categories.Any())
+                {
+                    <p class="text-muted mb-0">No categories yet. Participants can only enrol once you add at least one.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr><th>Name</th><th>Distance</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@category.Name</td>
+                                        <td>@category.DistanceKm.ToString("0.##") km</td>
+                                        <td class="text-end">
+                                            <div class="d-flex gap-2 justify-content-end">
+                                                <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-outline-primary btn-sm">Edit</a>
+                                                <form asp-action="Delete" asp-route-id="@category.Id" asp-route-eventId="@Model.Event.Id" method="post"
+                                                      onsubmit="return confirm('Delete this category?');">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
