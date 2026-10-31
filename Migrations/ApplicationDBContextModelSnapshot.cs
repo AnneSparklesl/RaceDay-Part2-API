@@ -75,6 +75,12 @@ namespace API_proj.Migrations
                         .HasColumnType("int")
                         .HasColumnName("participant_id");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("status");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");

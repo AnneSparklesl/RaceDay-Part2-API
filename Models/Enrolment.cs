@@ -24,6 +24,10 @@ public class Enrolment
     [Column("enrolment_date", TypeName = "datetime")]
     public DateTime? EnrolmentDate { get; set; }
 
+    // "Pending" when a Participant enrols, "Confirmed" once the Organiser confirms
+    [Required, MaxLength(20)]
+    [Column("status", TypeName = "varchar(20)")]
+    public string Status { get; set; } = "Pending";
+
     public Result? Result { get; set; }
 }
-
