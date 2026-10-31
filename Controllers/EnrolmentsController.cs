@@ -37,7 +37,8 @@ public class EnrolmentsController : ControllerBase
                 Category = e.Category.Name,
                 EventId = e.Category.EventId,
                 Event = e.Category.Event.Name,
-                e.EnrolmentDate
+                e.EnrolmentDate,
+                e.Status
             })
             .ToListAsync();
 
@@ -53,7 +54,7 @@ public class EnrolmentsController : ControllerBase
 
         var enrolments = await _context.Enrolments
             .Where(e => e.ParticipantId == participantId)
-            .OrderBy(e => e.Category.EventId)
+            .OrderBy(e => e.Category.Event.EventDate)
             .Select(e => new
             {
                 e.Id,
@@ -61,7 +62,9 @@ public class EnrolmentsController : ControllerBase
                 Category = e.Category.Name,
                 EventId = e.Category.EventId,
                 Event = e.Category.Event.Name,
-                e.EnrolmentDate
+                EventDate = e.Category.Event.EventDate,
+                e.EnrolmentDate,
+                e.Status
             })
             .ToListAsync();
 
@@ -86,7 +89,8 @@ public class EnrolmentsController : ControllerBase
         {
             ParticipantId = participantId,
             CategoryId = request.CategoryId,
-            EnrolmentDate = DateTime.Now
+            EnrolmentDate = DateTime.Now,
+            Status = "Pending"
         };
 
         _context.Enrolments.Add(enrolment);
@@ -97,8 +101,34 @@ public class EnrolmentsController : ControllerBase
             enrolment.Id,
             enrolment.ParticipantId,
             enrolment.CategoryId,
-            enrolment.EnrolmentDate
+            enrolment.EnrolmentDate,
+            enrolment.Status
         });
+    }
+
+    // PUT /api/enrolments/{id}/status - Organisers confirm or reset enrolments in their own events
+    [HttpPut("{id}/status")]
+    [SessionAuthorize("Organiser")]
+    public async Task<IActionResult> UpdateStatus(int id, EnrolmentStatusRequest request)
+    {
+        if (request.Status != "Pending" && request.Status != "Confirmed")
+            return BadRequest(new { message = "Status must be 'Pending' or 'Confirmed'." });
+
+        var enrolment = await _context.Enrolments
+            .Include(e => e.Category).ThenInclude(c => c.Event)
+            .FirstOrDefaultAsync(e => e.Id == id);
+        if (enrolment == null)
+            return NotFound(new { message = "Enrolment not found." });
+
+        var organiserId = HttpContext.Session.GetInt32("UserId")!.Value;
+        if (enrolment.Category.Event.OrganiserId != organiserId)
+            return StatusCode(StatusCodes.Status403Forbidden,
+                new { message = "You can only change enrolments for your own events." });
+
+        enrolment.Status = request.Status;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { enrolment.Id, enrolment.Status });
     }
 
     // DELETE /api/enrolments/{id} - owner can cancel their own; Organisers can cancel any
