@@ -75,6 +75,7 @@ public class ResultsController : ControllerBase
     }
 
     // GET /api/users/me/results - a Participant sees their own results
+    // Includes the event date and how many people finished the event (e.g. "47th out of 312")
     [HttpGet("/api/users/me/results")]
     [SessionAuthorize("Participant")]
     public async Task<IActionResult> GetMine()
@@ -83,15 +84,19 @@ public class ResultsController : ControllerBase
 
         var results = await _context.Results
             .Where(r => r.Enrolment.ParticipantId == participantId)
-            .OrderBy(r => r.Enrolment.Category.EventId)
+            .OrderByDescending(r => r.Enrolment.Category.Event.EventDate)
             .Select(r => new
             {
                 r.Id,
                 r.EnrolmentId,
+                EventId = r.Enrolment.Category.EventId,
                 Category = r.Enrolment.Category.Name,
                 Event = r.Enrolment.Category.Event.Name,
+                EventDate = r.Enrolment.Category.Event.EventDate,
                 r.FinishTime,
-                r.Position
+                r.Position,
+                TotalFinishers = _context.Results.Count(x =>
+                    x.Enrolment.Category.EventId == r.Enrolment.Category.EventId)
             })
             .ToListAsync();
 
