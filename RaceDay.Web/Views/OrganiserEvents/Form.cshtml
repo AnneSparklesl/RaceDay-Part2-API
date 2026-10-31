@@ -1,0 +1,82 @@
+﻿@model RaceDay.Web.ViewModels.EventFormViewModel
+@{
+    var isNew = Model.Id == 0;
+    ViewData["Title"] = isNew ? "Create event" : "Edit event";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <h1 class="h3 mb-3">@(isNew ? "Create an event" : "Edit event")</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <form method="post" asp-action="@(isNew ? "Create" : "Edit")">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Event name</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="EventDate" class="form-label">Date and time</label>
+                            <input type="datetime-local" id="EventDate" name="EventDate" class="form-control"
+                                   value="@(Model.EventDate?.ToString("yyyy-MM-dd'T'HH:mm"))" />
+                            <span asp-validation-for="EventDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="VenueId" class="form-label">Venue</label>
+                            <select asp-for="VenueId" class="form-select">
+                                <option value="">Choose a venue</option>
+                                @foreach (var venue in Model.Venues)
+                                {
+                                    <option value="@venue.Id">@venue.Name (@venue.City)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="VenueId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EventType" class="form-label">Event type</label>
+                            <select asp-for="EventType" class="form-select">
+                                <option value="">Choose a type</option>
+                                @foreach (var type in new[] { "Run", "Walk", "Cycle" })
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </select>
+                            <span asp-validation-for="EventType" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="DistanceKm" class="form-label">Distance (km)</label>
+                            <input asp-for="DistanceKm" type="number" step="0.01" min="0.1" class="form-control" />
+                            <span asp-validation-for="DistanceKm" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">@(isNew ? "Create event" : "Save changes")</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
