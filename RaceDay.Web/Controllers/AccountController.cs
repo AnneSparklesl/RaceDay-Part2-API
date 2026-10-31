@@ -13,12 +13,21 @@ public class AccountController : Controller
         _api = api;
     }
 
+    // Organisers start on their dashboard, Participants on the home page
+    private IActionResult RedirectToStartPage()
+    {
+        if (HttpContext.Session.GetString("Role") == "Organiser")
+            return RedirectToAction("Index", "Dashboard");
+
+        return RedirectToAction("Index", "Home");
+    }
+
     // ---------- Login ----------
     [HttpGet]
     public IActionResult Login()
     {
         if (HttpContext.Session.GetInt32("UserId") != null)
-            return RedirectToAction("Index", "Home");
+            return RedirectToStartPage();
 
         return View();
     }
@@ -43,7 +52,7 @@ public class AccountController : Controller
         HttpContext.Session.SetString("UserName", result.Data.Name);
         HttpContext.Session.SetString("Role", result.Data.Role);
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToStartPage();
     }
 
     // ---------- Register ----------
@@ -51,7 +60,7 @@ public class AccountController : Controller
     public IActionResult Register()
     {
         if (HttpContext.Session.GetInt32("UserId") != null)
-            return RedirectToAction("Index", "Home");
+            return RedirectToStartPage();
 
         return View();
     }
