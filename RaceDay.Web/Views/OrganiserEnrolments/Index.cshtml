@@ -1,0 +1,95 @@
+﻿@model RaceDay.Web.ViewModels.EnrolmentsPageViewModel
+@{
+    ViewData["Title"] = "Enrolments";
+}
+
+<h1 class="mb-1">Enrolments</h1>
+<p class="text-muted mb-4">See who has entered each of your events and confirm their entries.</p>
+
+@if (!Model.Events.Any())
+{
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <p class="text-muted mb-3">You have no events yet.</p>
+            <a asp-controller="OrganiserEvents" asp-action="Create" class="btn btn-primary">Create an event</a>
+        </div>
+    </div>
+}
+else
+{
+    <form method="get" asp-action="Index" class="card mb-4">
+        <div class="card-body">
+            <label class="form-label" for="eventId">Event</label>
+            <select class="form-select" id="eventId" name="eventId" onchange="this.form.submit()">
+                @foreach (var item in Model.Events)
+                {
+                    <option value="@item.Id" selected="@(Model.SelectedEvent?.Id == item.Id)">
+                        @item.Name &middot; @item.EventDate.ToString("dd MMM yyyy")
+                    </option>
+                }
+            </select>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="card-body">
+            @if (!Model.Enrolments.Any())
+            {
+                <p class="text-muted mb-0">Nobody has enrolled in this event yet.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Category</th>
+                                <th>Enrolled on</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var enrolment in Model.Enrolments)
+                            {
+                                var confirmed = enrolment.Status == "Confirmed";
+                                <tr>
+                                    <td class="fw-semibold">@enrolment.Participant</td>
+                                    <td>@enrolment.Category</td>
+                                    <td>@(enrolment.EnrolmentDate?.ToString("dd MMM yyyy") ?? "-")</td>
+                                    <td>
+                                        <span class="badge status-badge @(confirmed ? "status-confirmed" : "status-pending")">@enrolment.Status</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-flex gap-2 justify-content-end">
+                                            <form asp-action="SetStatus" method="post">
+                                                <input type="hidden" name="id" value="@enrolment.Id" />
+                                                <input type="hidden" name="eventId" value="@Model.SelectedEvent!.Id" />
+                                                <input type="hidden" name="status" value="@(confirmed ? "Pending" : "Confirmed")" />
+                                                @if (confirmed)
+                                                {
+                                                    <button type="submit" class="btn btn-outline-secondary btn-sm">Set pending</button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit" class="btn btn-primary btn-sm">Confirm</button>
+                                                }
+                                            </form>
+                                            <form asp-action="Remove" method="post"
+                                                  onsubmit="return confirm('Remove this enrolment?');">
+                                                <input type="hidden" name="id" value="@enrolment.Id" />
+                                                <input type="hidden" name="eventId" value="@Model.SelectedEvent!.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}
