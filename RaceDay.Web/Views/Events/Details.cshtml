@@ -1,0 +1,82 @@
+﻿@model RaceDay.Web.ViewModels.EventDetailsViewModel
+@{
+    ViewData["Title"] = Model.Event.Name;
+}
+
+<a asp-controller="Home" asp-action="Index" class="text-decoration-none">&larr; Back to events</a>
+
+<div class="row g-4 mt-1">
+    <div class="col-lg-7">
+        <div class="event-banner event-banner-lg mb-3"><span>@Model.Event.EventType</span></div>
+
+        <h1 class="mb-2">@Model.Event.Name</h1>
+        <div class="mb-3">
+            <span class="badge bg-secondary">@Model.Event.EventType</span>
+            <span class="badge bg-light text-dark border">@Model.Event.DistanceKm.ToString("0.##") km</span>
+            @if (!Model.IsUpcoming)
+            {
+                <span class="badge status-badge status-cancelled">Completed</span>
+            }
+        </div>
+
+        <p class="lead">@Model.Event.Description</p>
+
+        <dl class="row">
+            <dt class="col-sm-3">When</dt>
+            <dd class="col-sm-9">@Model.Event.EventDate.ToString("dddd, dd MMM yyyy 'at' HH:mm")</dd>
+            <dt class="col-sm-3">Venue</dt>
+            <dd class="col-sm-9">@Model.Event.Venue</dd>
+            <dt class="col-sm-3">Organiser</dt>
+            <dd class="col-sm-9">@Model.Event.Organiser</dd>
+            <dt class="col-sm-3">Distance</dt>
+            <dd class="col-sm-9">@Model.Event.DistanceKm.ToString("0.##") km</dd>
+        </dl>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Choose a category</h2>
+
+                @if (!Model.Categories.Any())
+                {
+                    <p class="text-muted mb-0">The organiser has not added categories yet. Check back soon.</p>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var category in Model.Categories)
+                        {
+                            var enrolled = Model.EnrolledCategoryIds.Contains(category.Id);
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                <div>
+                                    <div class="fw-semibold">@category.Name</div>
+                                    <div class="small text-muted">@category.DistanceKm.ToString("0.##") km</div>
+                                </div>
+                                @if (Model.IsParticipant)
+                                {
+                                    if (enrolled)
+                                    {
+                                        <span class="badge status-badge status-confirmed">Enrolled</span>
+                                    }
+                                    else if (!Model.IsUpcoming)
+                                    {
+                                        <span class="text-muted small">Closed</span>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="Enrol" method="post">
+                                            <input type="hidden" name="categoryId" value="@category.Id" />
+                                            <input type="hidden" name="eventId" value="@Model.Event.Id" />
+                                            <button type="submit" class="btn btn-primary btn-sm">Enrol</button>
+                                        </form>
+                                    }
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
