@@ -179,3 +179,39 @@ a {
         transform: translateY(-3px);
         box-shadow: 0 6px 18px rgba(11, 31, 58, 0.18);
     }
+
+/* Result position badge */
+.position-badge {
+    display: inline-block;
+    background-color: var(--rd-navy);
+    color: #fff;
+    font-weight: 700;
+    padding: 0.45em 0.9em;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.position-first {
+    background-color: var(--rd-orange);
+}
+
+/* Profile avatar */
+.avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: var(--rd-orange);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    overflow: hidden;
+}
+
+    .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
