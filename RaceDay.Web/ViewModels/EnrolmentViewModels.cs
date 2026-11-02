@@ -11,4 +11,13 @@ public class EnrolmentItemViewModel
     public int EventId { get; set; }
     public string Event { get; set; } = string.Empty;
     public DateTime? EnrolmentDate { get; set; }
+    public string Status { get; set; } = "Pending";
+}
+
+// Everything the Organiser enrolments page shows
+public class EnrolmentsPageViewModel
+{
+    public List<EventItemViewModel> Events { get; set; } = new();
+    public EventItemViewModel? SelectedEvent { get; set; }
+    public List<EnrolmentItemViewModel> Enrolments { get; set; } = new();
 }
