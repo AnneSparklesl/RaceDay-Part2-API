@@ -1,0 +1,73 @@
+﻿@model List<RaceDay.Web.ViewModels.MyResultViewModel>
+@{
+    ViewData["Title"] = "My results";
+}
+
+<h1 class="mb-1">My results</h1>
+<p class="text-muted mb-4">Your race history across every event you have finished.</p>
+
+@if (!Model.Any())
+{
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <p class="text-muted mb-3">No results yet. They appear here once an organiser records them after your event.</p>
+            <a asp-controller="MyEvents" asp-action="Index" class="btn btn-primary">View my events</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small text-uppercase fw-semibold">Races finished</div>
+                    <div class="display-6 fw-bold">@Model.Count</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small text-uppercase fw-semibold">Best finishing position</div>
+                    <div class="display-6 fw-bold">@RaceDay.Web.ViewModels.MyResultViewModel.Ordinal(Model.Min(r => r.Position))</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Finish time</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-controller="Events" asp-action="Details" asp-route-id="@item.EventId"
+                                       class="fw-semibold text-decoration-none">@item.Event</a>
+                                </td>
+                                <td>@item.EventDate.ToString("dd MMM yyyy")</td>
+                                <td>@item.Category</td>
+                                <td class="fw-semibold">@item.FinishTime</td>
+                                <td>
+                                    <span class="position-badge @(item.Position == 1 ? "position-first" : "")">@item.PositionText</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
