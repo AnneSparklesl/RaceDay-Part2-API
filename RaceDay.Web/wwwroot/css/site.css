@@ -134,3 +134,48 @@ a {
     padding: 1rem 0;
     border-top: 4px solid var(--rd-orange);
 }
+
+/* Orange primary buttons (override Bootstrap) */
+.btn-primary {
+    background-color: var(--rd-orange) !important;
+    border-color: var(--rd-orange) !important;
+    color: #fff !important;
+    font-weight: 700;
+}
+
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+        background-color: var(--rd-orange-dark) !important;
+        border-color: var(--rd-orange-dark) !important;
+    }
+
+/* Event cards and banners */
+.event-banner {
+    height: 130px;
+    background: linear-gradient(135deg, var(--rd-navy) 0%, #1c3d6b 60%, var(--rd-orange) 140%);
+    display: flex;
+    align-items: flex-end;
+    padding: 0.75rem 1rem;
+    border-radius: 12px 12px 0 0;
+}
+
+    .event-banner span {
+        color: #fff;
+        font-weight: 900;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-size: 1.1rem;
+    }
+
+.event-banner-lg {
+    height: 220px;
+    border-radius: 12px;
+}
+
+.event-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+    .event-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(11, 31, 58, 0.18);
+    }
