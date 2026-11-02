@@ -1,0 +1,66 @@
+﻿@model List<RaceDay.Web.ViewModels.MyEnrolmentViewModel>
+@{
+    ViewData["Title"] = "My events";
+}
+
+<h1 class="mb-4">My events</h1>
+
+@if (!Model.Any())
+{
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <p class="text-muted mb-3">You have not enrolled in any events yet.</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Browse events</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var upcoming = item.EventDate >= DateTime.Now;
+                            <tr>
+                                <td>
+                                    <a asp-controller="Events" asp-action="Details" asp-route-id="@item.EventId"
+                                       class="fw-semibold text-decoration-none">@item.Event</a>
+                                </td>
+                                <td>@item.EventDate.ToString("dd MMM yyyy, HH:mm")</td>
+                                <td>@item.Category</td>
+                                <td>
+                                    <span class="badge status-badge @(item.Status == "Confirmed" ? "status-confirmed" : "status-pending")">@item.Status</span>
+                                </td>
+                                <td class="text-end">
+                                    @if (upcoming)
+                                    {
+                                        <form asp-action="Cancel" asp-route-id="@item.Id" method="post"
+                                              onsubmit="return confirm('Cancel this enrolment?');">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Completed</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
