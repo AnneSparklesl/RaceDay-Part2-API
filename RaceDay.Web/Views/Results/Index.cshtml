@@ -1,0 +1,101 @@
+﻿@model RaceDay.Web.ViewModels.ResultsPageViewModel
+@{
+    ViewData["Title"] = "Results";
+}
+
+<h1 class="mb-1">Results</h1>
+<p class="text-muted mb-4">Record finish times and positions after an event. Saved results are published to participants straight away.</p>
+
+@if (!Model.Events.Any())
+{
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <p class="text-muted mb-3">You have no events yet.</p>
+            <a asp-controller="OrganiserEvents" asp-action="Create" class="btn btn-primary">Create an event</a>
+        </div>
+    </div>
+}
+else
+{
+    <form method="get" asp-action="Index" class="card mb-4">
+        <div class="card-body">
+            <label class="form-label" for="eventId">Event</label>
+            <select class="form-select" id="eventId" name="eventId" onchange="this.form.submit()">
+                @foreach (var item in Model.Events)
+                {
+                    <option value="@item.Id" selected="@(Model.SelectedEvent?.Id == item.Id)">
+                        @item.Name &middot; @item.EventDate.ToString("dd MMM yyyy") &middot; @(item.EventDate < DateTime.Now ? "completed" : "upcoming")
+                    </option>
+                }
+            </select>
+        </div>
+    </form>
+
+    @if (!Model.EventHasConcluded)
+    {
+        <div class="alert alert-info">
+            This event has not taken place yet, so results cannot be entered. Come back after the event date.
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            @if (!Model.Rows.Any())
+            {
+                <p class="text-muted mb-0">Nobody has enrolled in this event, so there is nothing to record.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Category</th>
+                                <th>Entry</th>
+                                <th>Finish time (HH:MM:SS) and position</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in Model.Rows)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@row.Participant</td>
+                                    <td>@row.Category</td>
+                                    <td>
+                                        <span class="badge status-badge @(row.Status == "Confirmed" ? "status-confirmed" : "status-pending")">@row.Status</span>
+                                    </td>
+                                    <td>
+                                        <form asp-action="Save" method="post" class="d-flex gap-2 align-items-center">
+                                            <fieldset class="d-flex gap-2 align-items-center m-0 p-0 border-0" disabled="@(!Model.EventHasConcluded)">
+                                                <input type="hidden" name="enrolmentId" value="@row.EnrolmentId" />
+                                                <input type="hidden" name="resultId" value="@row.ResultId" />
+                                                <input type="hidden" name="eventId" value="@Model.SelectedEvent!.Id" />
+                                                <input type="text" name="finishTime" value="@row.FinishTime" placeholder="00:52:30"
+                                                       pattern="\d{2}:\d{2}:\d{2}" class="form-control form-control-sm" style="width:120px" required />
+                                                <input type="number" name="position" min="1" value="@row.Position" placeholder="Pos"
+                                                       class="form-control form-control-sm" style="width:90px" required />
+                                                <button type="submit" class="btn btn-primary btn-sm">@(row.ResultId == 0 ? "Save" : "Update")</button>
+                                            </fieldset>
+                                        </form>
+                                    </td>
+                                    <td class="text-end">
+                                        @if (row.ResultId > 0)
+                                        {
+                                            <form asp-action="Delete" method="post" onsubmit="return confirm('Delete this result?');">
+                                                <input type="hidden" name="id" value="@row.ResultId" />
+                                                <input type="hidden" name="eventId" value="@Model.SelectedEvent!.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}
