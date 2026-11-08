@@ -16,6 +16,7 @@ public class EventItemViewModel
     public string Venue { get; set; } = string.Empty;
     public int OrganiserId { get; set; }
     public string Organiser { get; set; } = string.Empty;
+    public string? BannerUrl { get; set; }
 }
 
 // The create / edit form
@@ -43,6 +44,13 @@ public class EventFormViewModel
     [Required(ErrorMessage = "Please enter the distance in km.")]
     [Range(typeof(decimal), "0.1", "999.99", ErrorMessage = "Distance must be between 0.1 and 999.99 km.")]
     public decimal? DistanceKm { get; set; }
+
+    // The banner already saved for this event (shown on the edit page)
+    [ValidateNever]
+    public string? BannerUrl { get; set; }
+
+    // A newly chosen banner file (optional)
+    public IFormFile? Banner { get; set; }
 
     // Filled by the controller for the dropdown, not part of the form
     [ValidateNever]

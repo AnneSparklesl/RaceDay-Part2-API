@@ -10,10 +10,12 @@ namespace RaceDay.Web.Controllers;
 public class OrganiserEventsController : BaseController
 {
     private readonly ApiService _api;
+    private readonly ImageStorageService _images;
 
-    public OrganiserEventsController(ApiService api)
+    public OrganiserEventsController(ApiService api, ImageStorageService images)
     {
         _api = api;
+        _images = images;
     }
 
     private int CurrentUserId => HttpContext.Session.GetInt32("UserId") ?? 0;
@@ -89,14 +91,42 @@ public class OrganiserEventsController : BaseController
         if (!ModelState.IsValid)
             return View("Form", model);
 
-        var result = await _api.PostAsync<object>("api/events", ToRequest(model));
-        if (result.StatusCode == HttpStatusCode.Unauthorized)
-            return SessionExpired();
-
-        if (!result.Success)
+        // Save the banner file first, so a bad image stops us before the event is created
+        string? bannerUrl = null;
+        if (model.Banner != null && model.Banner.Length > 0)
         {
+            var saved = await _images.SaveAsync(model.Banner, "banners");
+            if (saved.Error != null)
+            {
+                ModelState.AddModelError(nameof(EventFormViewModel.Banner), saved.Error);
+                return View("Form", model);
+            }
+            bannerUrl = saved.Url;
+        }
+
+        var result = await _api.PostAsync<EventItemViewModel>("api/events", ToRequest(model));
+        if (result.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            _images.Delete(bannerUrl);
+            return SessionExpired();
+        }
+
+        if (!result.Success || result.Data == null)
+        {
+            _images.Delete(bannerUrl);
             ModelState.AddModelError(string.Empty, result.Message ?? "We could not create the event.");
             return View("Form", model);
+        }
+
+        if (bannerUrl != null)
+        {
+            var banner = await _api.PutAsync<object>($"api/events/{result.Data.Id}/banner", new { Url = bannerUrl });
+            if (!banner.Success)
+            {
+                _images.Delete(bannerUrl);
+                TempData["Error"] = "The event was created, but the banner could not be saved. Edit the event to try again.";
+                return RedirectToAction("Index");
+            }
         }
 
         TempData["Success"] = "Event created.";
@@ -136,6 +166,7 @@ public class OrganiserEventsController : BaseController
             VenueId = found.Data.VenueId,
             EventType = found.Data.EventType,
             DistanceKm = found.Data.DistanceKm,
+            BannerUrl = found.Data.BannerUrl,
             Venues = venues.Data ?? new List<VenueViewModel>()
         };
 
@@ -145,6 +176,25 @@ public class OrganiserEventsController : BaseController
     [HttpPost]
     public async Task<IActionResult> Edit(EventFormViewModel model)
     {
+        // Load the saved event again: we need its real current banner, and to confirm ownership
+        var current = await _api.GetAsync<EventItemViewModel>($"api/events/{model.Id}");
+        if (current.StatusCode == HttpStatusCode.Unauthorized)
+            return SessionExpired();
+
+        if (!current.Success || current.Data == null)
+        {
+            TempData["Error"] = current.Message ?? "We could not find that event.";
+            return RedirectToAction("Index");
+        }
+
+        if (current.Data.OrganiserId != CurrentUserId)
+        {
+            TempData["Error"] = "You can only edit your own events.";
+            return RedirectToAction("Index");
+        }
+
+        model.BannerUrl = current.Data.BannerUrl;
+
         var venues = await GetVenuesAsync();
         if (venues.StatusCode == HttpStatusCode.Unauthorized)
             return SessionExpired();
@@ -153,14 +203,46 @@ public class OrganiserEventsController : BaseController
         if (!ModelState.IsValid)
             return View("Form", model);
 
+        string? newBannerUrl = null;
+        if (model.Banner != null && model.Banner.Length > 0)
+        {
+            var saved = await _images.SaveAsync(model.Banner, "banners");
+            if (saved.Error != null)
+            {
+                ModelState.AddModelError(nameof(EventFormViewModel.Banner), saved.Error);
+                return View("Form", model);
+            }
+            newBannerUrl = saved.Url;
+        }
+
         var result = await _api.PutAsync<object>($"api/events/{model.Id}", ToRequest(model));
         if (result.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            _images.Delete(newBannerUrl);
             return SessionExpired();
+        }
 
         if (!result.Success)
         {
+            _images.Delete(newBannerUrl);
             ModelState.AddModelError(string.Empty, result.Message ?? "We could not save your changes.");
             return View("Form", model);
+        }
+
+        if (newBannerUrl != null)
+        {
+            var banner = await _api.PutAsync<object>($"api/events/{model.Id}/banner", new { Url = newBannerUrl });
+            if (banner.Success)
+            {
+                // The new banner is saved, so the old file is no longer needed
+                _images.Delete(current.Data.BannerUrl);
+            }
+            else
+            {
+                _images.Delete(newBannerUrl);
+                TempData["Error"] = "Your changes were saved, but the new banner could not be saved. Please try again.";
+                return RedirectToAction("Index");
+            }
         }
 
         TempData["Success"] = "Event updated.";
