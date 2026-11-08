@@ -28,7 +28,8 @@ public class EventsController : ControllerBase
         e.EventType,
         e.DistanceKm,
         e.VenueId,
-        e.OrganiserId
+        e.OrganiserId,
+        e.BannerUrl
     };
 
     // GET /api/events - any logged-in user
@@ -49,7 +50,8 @@ public class EventsController : ControllerBase
                 e.VenueId,
                 Venue = e.Venue.Name,
                 e.OrganiserId,
-                Organiser = e.Organiser.Name
+                Organiser = e.Organiser.Name,
+                e.BannerUrl
             })
             .ToListAsync();
 
@@ -74,7 +76,8 @@ public class EventsController : ControllerBase
                 e.VenueId,
                 Venue = e.Venue.Name,
                 e.OrganiserId,
-                Organiser = e.Organiser.Name
+                Organiser = e.Organiser.Name,
+                e.BannerUrl
             })
             .FirstOrDefaultAsync();
 
@@ -143,6 +146,30 @@ public class EventsController : ControllerBase
 
         await _context.SaveChangesAsync();
         return Ok(Shape(existing));
+    }
+
+    // PUT /api/events/{id}/banner - Organisers only, and only their own events
+    // The image file itself is saved by the web app in wwwroot; the API stores its web path.
+    [HttpPut("{id}/banner")]
+    [SessionAuthorize("Organiser")]
+    public async Task<IActionResult> SetBanner(int id, ImageUrlRequest request)
+    {
+        var existing = await _context.Events.FindAsync(id);
+        if (existing == null)
+            return NotFound(new { message = "Event not found." });
+
+        var organiserId = HttpContext.Session.GetInt32("UserId")!.Value;
+        if (existing.OrganiserId != organiserId)
+            return StatusCode(StatusCodes.Status403Forbidden,
+                new { message = "You can only change the banner of your own events." });
+
+        if (!request.Url.StartsWith("/uploads/banners/"))
+            return BadRequest(new { message = "That is not a valid banner image path." });
+
+        existing.BannerUrl = request.Url;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { existing.Id, existing.BannerUrl });
     }
 
     // DELETE /api/events/{id} - Organisers only, and only their own events
