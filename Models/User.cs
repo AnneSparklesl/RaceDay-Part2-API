@@ -31,5 +31,9 @@ public class User
 
     [Column("created_at", TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
-}
 
+    // Web path of the profile picture saved in RaceDay.Web/wwwroot, e.g. /uploads/profiles/abc.jpg
+    [MaxLength(300)]
+    [Column("profile_picture_url", TypeName = "varchar(300)")]
+    public string? ProfilePictureUrl { get; set; }
+}

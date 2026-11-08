@@ -40,6 +40,10 @@ public class Event
     [Column("distance_km", TypeName = "decimal(5,2)")]
     public decimal DistanceKm { get; set; }
 
+    // Web path of the banner image saved in RaceDay.Web/wwwroot, e.g. /uploads/banners/abc.jpg
+    [MaxLength(300)]
+    [Column("banner_url", TypeName = "varchar(300)")]
+    public string? BannerUrl { get; set; }
+
     public ICollection<Category> Categories { get; set; } = new List<Category>();
 }
-
