@@ -19,6 +19,7 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<ImageStorageService>();
 
 // HttpClient that talks to the Part 2 API
 builder.Services.AddHttpClient<ApiService>(client =>
