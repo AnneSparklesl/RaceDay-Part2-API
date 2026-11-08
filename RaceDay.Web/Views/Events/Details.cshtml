@@ -7,7 +7,14 @@
 
 <div class="row g-4 mt-1">
     <div class="col-lg-7">
-        <div class="event-banner event-banner-lg mb-3"><span>@Model.Event.EventType</span></div>
+        @if (!string.IsNullOrWhiteSpace(Model.Event.BannerUrl))
+        {
+            <img src="@Model.Event.BannerUrl" alt="@Model.Event.Name banner" class="event-banner-img event-banner-img-lg mb-3" />
+        }
+        else
+        {
+            <div class="event-banner event-banner-lg mb-3"><span>@Model.Event.EventType</span></div>
+        }
 
         <h1 class="mb-2">@Model.Event.Name</h1>
         <div class="mb-3">

@@ -215,3 +215,23 @@ a {
         height: 100%;
         object-fit: cover;
     }
+/* Uploaded banner images */
+.event-banner-img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+    display: block;
+}
+
+.event-banner-img-lg {
+    height: 220px;
+    border-radius: 12px;
+}
+
+/* Larger profile avatar */
+.avatar-lg {
+    width: 96px;
+    height: 96px;
+    font-size: 2.2rem;
+}

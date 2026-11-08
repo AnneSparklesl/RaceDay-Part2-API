@@ -18,4 +18,11 @@ public class ProfileViewModel
     // Display only (nullable so the form does not require them)
     public string? Role { get; set; }
     public DateTime? CreatedAt { get; set; }
+    public string? ProfilePictureUrl { get; set; }
+}
+
+// What the API returns for GET api/users/me/picture
+public class PictureResponse
+{
+    public string? PictureUrl { get; set; }
 }

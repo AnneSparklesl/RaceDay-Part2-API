@@ -70,7 +70,14 @@ else
             {
                 <div class="col-md-6 col-lg-4">
                     <div class="card event-card h-100">
-                        <div class="event-banner"><span>@item.EventType</span></div>
+                        @if (!string.IsNullOrWhiteSpace(item.BannerUrl))
+                        {
+                            <img src="@item.BannerUrl" alt="@item.Name banner" class="event-banner-img" />
+                        }
+                        else
+                        {
+                            <div class="event-banner"><span>@item.EventType</span></div>
+                        }
                         <div class="card-body d-flex flex-column">
                             <h2 class="h5">@item.Name</h2>
                             <div class="text-muted small mb-2">@item.EventDate.ToString("ddd, dd MMM yyyy 'at' HH:mm")</div>
