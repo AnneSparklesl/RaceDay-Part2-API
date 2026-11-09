@@ -24,9 +24,17 @@ Part 3 adds an ASP.NET Core MVC web application (`RaceDay.Web`) that consumes th
 6. Open the web app, register an Organiser and a Participant account, and log in.
 
 ## Screenshots
+
+### Home page (Participant)
 ![Home page](docs/home.png)
+
+### Organiser dashboard
 ![Organiser dashboard](docs/dashboard.png)
+
+### Event details
 ![Event details](docs/event-details.png)
+
+### My results (Participant)
 ![My results](docs/my-results.png)
 
 ## Continuous integration
