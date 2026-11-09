@@ -5,7 +5,7 @@ Part 3 adds an ASP.NET Core MVC web application (`RaceDay.Web`) that consumes th
 ## Links
 - Part 1 repository: https://github.com/AnneSparklesl/RaceDay-Event-Management
 - Part 2 (API): the `master` branch of this repository
-- Part 3 demo video (unlisted YouTube): PASTE LINK HERE
+- Part 3 demo video (unlisted YouTube): https://youtu.be/EMSuGHm4Fho
 
 ## What is included
 - MVC web app that calls the API for all data (no database access in the MVC project)
