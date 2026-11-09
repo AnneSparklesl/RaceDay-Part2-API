@@ -1,4 +1,43 @@
-﻿# RaceDay Event Management System (API)
+﻿# RaceDay - Part 3 (Web Application)
+
+Part 3 adds an ASP.NET Core MVC web application (`RaceDay.Web`) that consumes the Part 2 API. It lives on the **Part3** branch of this repository.
+
+## Links
+- Part 1 repository: https://github.com/AnneSparklesl/RaceDay-Event-Management
+- Part 2 (API): the `master` branch of this repository
+- Part 3 demo video (unlisted YouTube): PASTE LINK HERE
+
+## What is included
+- MVC web app that calls the API for all data (no database access in the MVC project)
+- Session-based register and login, role-based menus (Organiser and Participant), protected pages redirect to login, logout clears the session
+- Organiser: dashboard, venues, events (create, edit, delete, banner upload), categories, enrolments (confirm), results entry
+- Participant: home with filters, event details, enrol, My Events (colour-coded status), My Results, profile with picture upload
+- Event banners and profile pictures are saved in `RaceDay.Web/wwwroot/uploads` and the API stores the image path
+- GitHub Actions workflow builds both the API and the MVC project
+
+## How to run
+1. Requirements: .NET 8 SDK and SQL Server (see the Part 2 notes below for the database setup and migrations).
+2. Open `API_proj.sln` in Visual Studio.
+3. Right-click the solution, choose Configure Startup Projects, then Multiple startup projects, and set `API_proj` and `RaceDay.Web` to Start.
+4. Press Start. The API runs on http://localhost:5054 and the web app on https://localhost:7232.
+5. If your API address is different, change `ApiSettings:BaseUrl` in `RaceDay.Web/appsettings.json`.
+6. Open the web app, register an Organiser and a Participant account, and log in.
+
+## Screenshots
+![Home page](docs/home.png)
+![Organiser dashboard](docs/dashboard.png)
+![Event details](docs/event-details.png)
+![My results](docs/my-results.png)
+
+## Continuous integration
+The workflow in `.github/workflows` builds the API and the MVC project on every push.
+
+![CI build](docs/ci-green-build-part3.png)
+
+## Notes
+- Azure Blob Storage and Docker were not used. The lecturer announced on the module page that Part 3 images use wwwroot and that Docker is not required.
+
+---# RaceDay Event Management System (API)
  
  Part 2 Repo link : https://github.com/AnneSparklesl/RaceDay-Part2-API/tree/master
  
