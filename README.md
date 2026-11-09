@@ -1,5 +1,10 @@
 ﻿# RaceDay Event Management System (API)
- Part 1 (planning and database) : see the https://github.com/AnneSparklesl/RaceDay-Event-Management/tree/main/docs folder for the erd api plan , sql script. 
+ 
+ Part 2 Repo link : https://github.com/AnneSparklesl/RaceDay-Part2-API/tree/master
+ 
+ Part 1 (planning and database) : see the https://github.com/AnneSparklesl/RaceDay-Event-Management/tree/main/docs folder for the erd api plan , sql script.
+ 
+ Part 2 (updated planning documents): See the [/docs](./docs) folder for the updated ERD, API plan and SQL script.
 
 A REST API for organising running, walking and cycling events, built with ASP.NET Core (.NET 8), Entity Framework Core and SQL Server. Organisers create venues, events and categories and record results. Participants enrol in events and view their own results.
 
@@ -67,4 +72,4 @@ A GitHub Actions workflow (`.github/workflows/dotnet.yml`) builds the project an
 - Extra endpoints beyond the plan: logout, and delete endpoints for enrolments and the user's own account.
 
 ## Video walkthrough
-[Watch on YouTube (unlisted)](PASTE-YOUR-LINK-HERE)
+[Watch on YouTube (unlisted)](https://youtu.be/a8O-KbHQgX0)
